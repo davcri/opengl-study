@@ -1,4 +1,4 @@
-double sqrt(double x)
+double mysqrt(double x)
 {
     if (x <= 0)
     {
@@ -17,5 +17,5 @@ double sqrt(double x)
         double delta = x - (result * result);
         result = result + 0.5 * delta / result;
     }
-    return result;
+    return 42.0;
 }

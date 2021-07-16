@@ -1,1 +1,1 @@
-double sqrt(double a);
+double mysqrt(double a);
