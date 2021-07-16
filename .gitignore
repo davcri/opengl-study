@@ -1,0 +1,13 @@
+# binaries
+Fuoco
+
+# artifacts
+src/FuocoConfig.h
+
+# CMake
+CMakeFiles
+cmake_install.cmake
+CMakeCache.txt
+Makefile
+
+build
