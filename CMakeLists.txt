@@ -7,11 +7,13 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 option(USE_MYMATH "Use tutorial provided math implementation" ON)
-
 if(USE_MYMATH)
-  add_subdirectory(libs/math)
+  add_subdirectory(libs/math)  
   list(APPEND EXTRA_LIBS Math)
 endif()
+
+add_subdirectory(libs/glfw-3.3.4)
+include_directories(libs/glfw-3.3.4/include)
 
 configure_file(./src/FuocoConfig.h.in ./src/FuocoConfig.h)
 
