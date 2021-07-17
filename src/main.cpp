@@ -7,6 +7,12 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
+void processInput(GLFWwindow *window)
+{
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+}
+
 int main()
 {
   std::cout << "Fuoco " << Fuoco_VERSION_MAJOR << "." << Fuoco_VERSION_MINOR
@@ -37,6 +43,10 @@ int main()
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
   while(!glfwWindowShouldClose(window)) {
+    processInput(window);
+    glClearColor(0.2, 0.2, 0.3, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
