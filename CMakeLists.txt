@@ -12,10 +12,15 @@ if(USE_MYMATH)
   list(APPEND EXTRA_LIBS Math)
 endif()
 
+# GLFW
 add_subdirectory(libs/glfw-3.3.4)
 include_directories(libs/glfw-3.3.4/include)
 list(APPEND EXTRA_LIBS glfw)
 list(APPEND EXTRA_LIBS ${glfw_LIBRARIES})
+# list(APPEND EXTRA_LIBS ${OPENGL_LIBRARY}) 
+
+# GLAD
+include_directories(libs/glad/include)
 
 configure_file(./src/FuocoConfig.h.in ./src/FuocoConfig.h)
 
