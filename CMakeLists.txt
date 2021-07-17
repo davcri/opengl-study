@@ -25,7 +25,7 @@ include_directories(libs/glad/include)
 configure_file(./src/FuocoConfig.h.in ./src/FuocoConfig.h)
 
 # add the executable
-add_executable(Fuoco src/main.cpp)
+add_executable(Fuoco src/main.cpp libs/glad/src/glad.c)
 
 target_link_libraries(Fuoco PUBLIC ${EXTRA_LIBS})
 
