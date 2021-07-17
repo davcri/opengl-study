@@ -14,6 +14,8 @@ endif()
 
 add_subdirectory(libs/glfw-3.3.4)
 include_directories(libs/glfw-3.3.4/include)
+list(APPEND EXTRA_LIBS glfw)
+list(APPEND EXTRA_LIBS ${glfw_LIBRARIES})
 
 configure_file(./src/FuocoConfig.h.in ./src/FuocoConfig.h)
 
