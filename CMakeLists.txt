@@ -23,3 +23,6 @@ target_link_libraries(Fuoco PUBLIC ${EXTRA_LIBS})
 target_include_directories(Fuoco PUBLIC
                            "${PROJECT_BINARY_DIR}"
                            )
+
+install(TARGETS Fuoco DESTINATION bin)                      
+install(FILES "${PROJECT_BINARY_DIR}/src/FuocoConfig.h" DESTINATION include)
