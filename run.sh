@@ -2,8 +2,7 @@
 # cmake --build . --target clean
 cmake . -DUSE_MYMATH=ON -B build
 cd build
-cmake --build .
-
+cmake --build . || exit
 echo ""
 echo "---"
 ./Fuoco
