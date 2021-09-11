@@ -47,14 +47,37 @@ int main()
   float vertices[] = {
       0.5f, 0.5f, 0.0f,   // top right
       0.5f, -0.5f, 0.0f,  // bottom right
+      -0.5f, 0.5f, 0.0f, // top left
+      0.5f, -0.5f, 0.0f,  // bottom right
       -0.5f, -0.5f, 0.0f, // bottom left
-      -0.5f, 0.5f, 0.0f   // top left
+      -0.5f, 0.5f, 0.0f  // top left
   };
 
-  unsigned int indices[] = {
-      0, 1, 3, // first triangle
-      1, 2, 3  // second triangle
-  };
+  // unsigned int indices[] = {
+  //     0, 1, 3, // first triangle
+  //     1, 2, 3  // second triangle
+  // };
+
+  unsigned int VAO; // vertex array object
+  glGenVertexArrays(1, &VAO);
+  // bind Vertex Array Object
+  glBindVertexArray(VAO);
+
+  unsigned int VBO[1]; // vertex buffer object
+  glGenBuffers(1, VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+  glEnableVertexAttribArray(0);
+
+  unsigned int VAO2;
+  glGenVertexArrays(1, &VAO2);
+  glBindVertexArray(VAO2);
+
+  glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+  // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)(9 * sizeof(float)));
+  glEnableVertexAttribArray(0);
 
   // init shader
   const char *vertexShaderSrc = "#version 330 core\n"
@@ -78,33 +101,6 @@ int main()
               << infoLog << std::endl;
   }
 
-  unsigned int VBO;
-  glGenBuffers(1, &VBO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-  glEnableVertexAttribArray(0);
-
-  unsigned int VAO;
-  glGenVertexArrays(1, &VAO);
-
-  unsigned int EBO;
-  glGenBuffers(1, &EBO);
-
-  // bind Vertex Array Object
-  glBindVertexArray(VAO);
-  // copy our vertices array in a buffer for OpenGL to use
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  // copy index array
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
-               GL_STATIC_DRAW);
-  
-  // set our vertex attributes pointers
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-  glEnableVertexAttribArray(0);
-
   // fragment shader
   unsigned int fragmentShader;
   char *fragmentSource = "#version 330 core\n"
@@ -127,7 +123,7 @@ int main()
   {
     glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
   }
-  // glUseProgram(shaderProgram);
+  glUseProgram(shaderProgram);
 
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
@@ -141,11 +137,16 @@ int main()
     glClear(GL_COLOR_BUFFER_BIT);
 
     // 4. draw the object
-    glUseProgram(shaderProgram);
+    // glUseProgram(shaderProgram);
     glBindVertexArray(VAO);
     // draw
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glBindVertexArray(VAO2);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    // glBindVertexArray(0);
     
     glfwSwapBuffers(window);
     glfwPollEvents();
