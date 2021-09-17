@@ -6,6 +6,9 @@ project(Fuoco VERSION 1.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# add shader library
+include_directories(libs/shader)
+
 option(USE_MYMATH "Use tutorial provided math implementation" ON)
 if(USE_MYMATH)
   add_subdirectory(libs/math)  
@@ -32,6 +35,8 @@ target_link_libraries(Fuoco PUBLIC ${EXTRA_LIBS})
 target_include_directories(Fuoco PUBLIC
                            "${PROJECT_BINARY_DIR}"
                            )
+
+file(COPY src/shaders/ DESTINATION shaders)
 
 install(TARGETS Fuoco DESTINATION bin)                      
 install(FILES "${PROJECT_BINARY_DIR}/src/FuocoConfig.h" DESTINATION include)
