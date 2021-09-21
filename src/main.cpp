@@ -89,7 +89,6 @@ int main()
 
     float elapsed = glfwGetTime();
 
-    program.setFloat("offset", 0.5);
     program.use();
 
     glBindVertexArray(VAO);
