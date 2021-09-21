@@ -89,9 +89,9 @@ int main()
 
     float elapsed = glfwGetTime();
 
-    float x = sin(elapsed);
-    float y = cos(elapsed);
-    glUniform2f(glGetUniformLocation(program.id, "pos"), x, y);
+    // float x = sin(elapsed);
+    // float y = cos(elapsed);
+    // glUniform2f(glGetUniformLocation(program.id, "pos"), x, y);
 
     program.use();
 
