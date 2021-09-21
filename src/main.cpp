@@ -89,10 +89,7 @@ int main()
 
     float elapsed = glfwGetTime();
 
-    // float x = sin(elapsed);
-    // float y = cos(elapsed);
-    // glUniform2f(glGetUniformLocation(program.id, "pos"), x, y);
-
+    program.setFloat("offset", 0.5);
     program.use();
 
     glBindVertexArray(VAO);
