@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "shader.h"
+#include "cmath"
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height)
 {
@@ -46,18 +47,11 @@ int main()
   // framebufferSizeCallback(window, 800, 600);
 
   float vertices[] = {
-      0.5f, 0.5f, 0.0f,   // top right
-      0.5f, -0.5f, 0.0f,  // bottom right
-      -0.5f, 0.5f, 0.0f,  // top left
-      0.5f, -0.5f, 0.0f,  // bottom right
-      -0.5f, -0.5f, 0.0f, // bottom left
-      -0.5f, 0.5f, 0.0f   // top left
+      0.0f, 0.5f, 0.0f,
+      0.5f, -0.5f, 0.0f,
+      -0.5f, -0.5f, 0.0f,
+      //
   };
-
-  // unsigned int indices[] = {
-  //     0, 1, 3, // first triangle
-  //     1, 2, 3  // second triangle
-  // };
 
   unsigned int VAO; // vertex array object
   glGenVertexArrays(1, &VAO);
@@ -81,9 +75,8 @@ int main()
   glEnableVertexAttribArray(0);
 
   Shader program("./shaders/shader.vert", "./shaders/shader.frag");
-  // Shader ourShader("path/to/shaders/shader.vs", "path/to/shaders/shader.fs");
 
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
 
   while (!glfwWindowShouldClose(window))
   {
@@ -91,13 +84,20 @@ int main()
     glClearColor(0.2, 0.2, 0.3, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    float elapsed = glfwGetTime();
+
+    float greenValue = (sin(elapsed) + 1.0f) / 2.0f;
+    int vertexColorLocation = glGetUniformLocation(program.id, "col");
+    glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+
+    float x = sin(elapsed);
+    float y = cos(elapsed);
+    glUniform2f(glGetUniformLocation(program.id, "pos"), x, y);
+
     program.use();
-    // glUseProgram();
+
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
-
-    // glBindVertexArray(VAO2);
-    // glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
