@@ -49,10 +49,10 @@ int main()
   // framebufferSizeCallback(window, 800, 600);
 
   float vertices[] = {
-      0.5f, 0.5f, 0.0f,
-      -0.5f, 0.5f, 0.0f,
-      0.5f, -0.5f, 0.0f,
-      -0.5f, -0.5f, 0.0f};
+      0.5f, 0.5f, 0.0f, 1.0f, 1.0f,    // top right
+      -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,   // top left
+      0.5f, -0.5f, 0.0f, 1.0f, 0.0f,   // bot right
+      -0.5f, -0.5f, 0.0f, 0.0f, 0.0f}; // bot left
 
   unsigned int indices[] = {
       0, 1, 2,
@@ -67,8 +67,11 @@ int main()
   glGenBuffers(1, VBO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
+  // uv coordinates
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   unsigned int EBO;
   glGenBuffers(1, &EBO);
@@ -79,16 +82,23 @@ int main()
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
 
-  // loading texture
-  int width, height, nrChannels;
-  unsigned char *data = stbi_load("./assets/Preview.png", &width, &height, &nrChannels, 0);
-
   unsigned int texture;
   glGenTextures(1, &texture);
+  glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
   glBindTexture(GL_TEXTURE_2D, texture);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  // loading texture
+  int width, height, nrChannels;
+  unsigned char *data = stbi_load("./assets/Preview.jpg", &width, &height, &nrChannels, 0);
+  std::cout << "nr channels: " << nrChannels << std::endl;
   if (data)
   {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(data);
   }
   else
@@ -106,6 +116,7 @@ int main()
     float elapsed = glfwGetTime();
 
     program.use();
+    glBindTexture(GL_TEXTURE_2D, texture);
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
