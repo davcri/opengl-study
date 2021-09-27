@@ -7,6 +7,8 @@ out vec3 outCol;
 out vec2 texCoord;
 
 uniform float elapsed;
+uniform float w;
+uniform float h;
 
 void main() {
   gl_Position = vec4(aPos, 1.0);

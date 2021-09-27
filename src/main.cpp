@@ -88,9 +88,8 @@ int main()
   glBindTexture(GL_TEXTURE_2D, texture);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   stbi_set_flip_vertically_on_load(true);
 
   // loading texture
@@ -112,10 +111,6 @@ int main()
   glGenTextures(1, &texture2);
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, texture2);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   int width2, height2, nrChannels2;
   unsigned char *data2 = stbi_load("./assets/awesomeface.png", &width2, &height2, &nrChannels2, 0);
   if (data2)
@@ -144,13 +139,9 @@ int main()
 
     float elapsed = glfwGetTime();
     program.setFloat("elapsed", elapsed);
-    // glBindTexture(GL_TEXTURE_2D, texture);
-    if (elapsed > 2.0 && !setted)
-    {
-      std::cout << "Cambiati i parametri" << std::endl;
-      setted = true;
-      // program.use();
-    }
+    program.setFloat("w", width);
+    program.setFloat("h", height);
+
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
