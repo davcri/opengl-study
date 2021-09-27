@@ -91,10 +91,11 @@ int main()
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+  stbi_set_flip_vertically_on_load(true);
+
   // loading texture
   int width, height, nrChannels;
   unsigned char *data = stbi_load("./assets/Preview.jpg", &width, &height, &nrChannels, 0);
-  std::cout << "nr channels: " << nrChannels << std::endl;
   if (data)
   {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -107,6 +108,28 @@ int main()
     return -1;
   }
 
+  unsigned int texture2;
+  glGenTextures(1, &texture2);
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, texture2);
+  int width2, height2, nrChannels2;
+  unsigned char *data2 = stbi_load("./assets/awesomeface.png", &width2, &height2, &nrChannels2, 0);
+  if (data2)
+  {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width2, height2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data2);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    stbi_image_free(data2);
+  }
+  else
+  {
+    std::cout << "ERROR::Loading texture failed" << std::endl;
+    return -1;
+  }
+
+  program.use();
+  glUniform1i(glGetUniformLocation(program.id, "outTexture"), 0);
+  glUniform1i(glGetUniformLocation(program.id, "outTexture2"), 1);
+
   while (!glfwWindowShouldClose(window))
   {
     processInput(window);
@@ -115,8 +138,7 @@ int main()
 
     float elapsed = glfwGetTime();
 
-    program.use();
-    glBindTexture(GL_TEXTURE_2D, texture);
+    // glBindTexture(GL_TEXTURE_2D, texture);
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
