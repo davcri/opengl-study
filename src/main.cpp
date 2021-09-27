@@ -12,10 +12,23 @@ void framebufferSizeCallback(GLFWwindow *window, int width, int height)
   glViewport(0, 0, width, height);
 }
 
+float mixAmount = 0.5;
+
 void processInput(GLFWwindow *window)
 {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
+
+  if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+  {
+    mixAmount += 0.01;
+    mixAmount = std::min(1.0f, mixAmount);
+  }
+  else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+  {
+    mixAmount -= 0.01;
+    mixAmount = std::max(0.0f, mixAmount);
+  }
 }
 
 int main()
@@ -139,8 +152,9 @@ int main()
 
     float elapsed = glfwGetTime();
     program.setFloat("elapsed", elapsed);
-    program.setFloat("w", width);
-    program.setFloat("h", height);
+    // program.setFloat("w", width);
+    // program.setFloat("h", height);
+    program.setFloat("mixAmount", mixAmount);
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
