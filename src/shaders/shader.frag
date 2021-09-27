@@ -8,16 +8,17 @@ uniform sampler2D outTexture2;
 
 out vec4 FragColor;
 
-void main() {
-    vec2 flipped_uv = texCoord;
-    flipped_uv.y = 1.0 - flipped_uv.y;
+uniform float elapsed;
 
-    vec4 col1 = texture(outTexture, texCoord);
-    vec4 col2 = texture(outTexture2, flipped_uv);
+void main() {
+    vec2 custom_uv = texCoord * (0.5 + (sin(elapsed) + 1.0));
+
+    vec4 col1 = texture(outTexture, custom_uv);
+    vec4 col2 = texture(outTexture2, custom_uv);
     
     if (col2.a == 0.0) {
         FragColor = col1;
     } else {
-        FragColor = mix(col1, col2, 0.5);;
+        FragColor = mix(col1, col2, 0.5);
     }
 };
