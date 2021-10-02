@@ -149,12 +149,6 @@ int main()
 
   bool setted = false;
 
-  glm::mat4 xform = glm::mat4(1.0f);
-  xform = glm::rotate(xform, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-  xform = glm::scale(xform, glm::vec3(1.5f, 1.5f, 1.5f));
-  unsigned int transformLoc = glGetUniformLocation(program.id, "transform");
-  glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(xform));
-
   while (!glfwWindowShouldClose(window))
   {
     processInput(window);
@@ -166,6 +160,15 @@ int main()
     // program.setFloat("w", width);
     // program.setFloat("h", height);
     program.setFloat("mixAmount", mixAmount);
+
+    glm::mat4 xform = glm::mat4(1.0f);
+    float angle = 180.0f;
+    angle = sin(2.0f * 3.14f * 0.1 * elapsed) * angle;
+    xform = glm::translate(xform, glm::vec3(0.5f, -0.5f, 0.0f));
+    xform = glm::rotate(xform, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+    // xform = glm::scale(xform, glm::vec3(1.5f, 1.5f, 1.5f));
+    unsigned int transformLoc = glGetUniformLocation(program.id, "transform");
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(xform));
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
