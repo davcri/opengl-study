@@ -7,6 +7,11 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
+
 void framebufferSizeCallback(GLFWwindow *window, int width, int height)
 {
   glViewport(0, 0, width, height);
@@ -143,6 +148,12 @@ int main()
   glUniform1i(glGetUniformLocation(program.id, "outTexture2"), 1);
 
   bool setted = false;
+
+  glm::mat4 xform = glm::mat4(1.0f);
+  xform = glm::rotate(xform, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+  xform = glm::scale(xform, glm::vec3(1.5f, 1.5f, 1.5f));
+  unsigned int transformLoc = glGetUniformLocation(program.id, "transform");
+  glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(xform));
 
   while (!glfwWindowShouldClose(window))
   {

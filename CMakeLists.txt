@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include_directories(libs/shader)
 include_directories(libs/stb_image)
+include_directories(libs/glm-0.9.9.8)
 
 option(USE_MYMATH "Use tutorial provided math implementation" ON)
 if(USE_MYMATH)
