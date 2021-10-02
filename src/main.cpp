@@ -148,6 +148,7 @@ int main()
   glUniform1i(glGetUniformLocation(program.id, "outTexture2"), 1);
 
   bool setted = false;
+  float freq = 0.1;
 
   while (!glfwWindowShouldClose(window))
   {
@@ -163,7 +164,7 @@ int main()
 
     glm::mat4 xform = glm::mat4(1.0f);
     float angle = 180.0f;
-    angle = sin(2.0f * 3.14f * 0.1 * elapsed) * angle;
+    angle = sin(2.0f * 3.14f * freq * elapsed) * angle;
     xform = glm::translate(xform, glm::vec3(0.5f, -0.5f, 0.0f));
     xform = glm::rotate(xform, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
     // xform = glm::scale(xform, glm::vec3(1.5f, 1.5f, 1.5f));
@@ -171,6 +172,16 @@ int main()
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(xform));
 
     glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    //
+    xform = glm::mat4(1.0f);
+    xform = glm::translate(xform, glm::vec3(-0.5f, 0.5f, 0.0f));
+    float val = sin(2.0f * 3.14f * freq * elapsed); // constexpr
+    val = (val + 1.0f) / 2.0f;
+    glm::vec3 scaleFactor = glm::vec3(1.0f, 1.0f, 1.0f) * val;
+    xform = glm::scale(xform, scaleFactor);
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(xform));
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     glfwSwapBuffers(window);
