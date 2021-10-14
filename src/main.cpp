@@ -12,7 +12,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-float fov = 50.0f;
+float viewX = 0.0f;
 int vWidth = 800;
 int vHeight = 600;
 
@@ -30,11 +30,11 @@ void processInput(GLFWwindow *window)
 
   if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
   {
-    fov += 5.0f;
+    viewX += 0.01f;
   }
   else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
   {
-    fov -= 5.0f;
+    viewX -= 0.01f;
   }
 }
 
@@ -181,6 +181,7 @@ int main()
   glm::mat4 model = glm::mat4(1.0f);
   glm::mat4 view = glm::mat4(1.0f);
   view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+  float fov = 50.0f;
   glm::mat4 proj = glm::perspective(glm::radians(fov), (float)vWidth / (float)vHeight, 0.1f, 100.0f);
 
   glm::vec3 cubePositions[] = {
@@ -206,6 +207,7 @@ int main()
 
     // model = glm::rotate(model, elapsed * 0.1f * glm::radians(1.0f), glm::vec3(0.5f, 1.0f, 0.0f));
     proj = glm::perspective(glm::radians(fov), (float)vWidth / (float)vHeight, 0.01f, 100.0f);
+    view = glm::translate(view, glm::vec3(viewX, 0.0, 0.0));
     unsigned int viewLoc = glGetUniformLocation(program.id, "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     unsigned int projLoc = glGetUniformLocation(program.id, "proj");
