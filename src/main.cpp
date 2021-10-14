@@ -47,7 +47,9 @@ int main()
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-  GLFWwindow *window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+  int vWidth = 800;
+  int vHeight = 600;
+  GLFWwindow *window = glfwCreateWindow(vWidth, vHeight, "LearnOpenGL", NULL, NULL);
   if (window == NULL)
   {
     std::cout << "Failed to create GLFW window" << std::endl;
@@ -67,18 +69,50 @@ int main()
   // framebufferSizeCallback(window, 800, 600);
 
   float vertices[] = {
-      0.5f, 0.5f, 0.0f, 1.0f, 1.0f,    // top right
-      -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,   // top left
-      0.5f, -0.5f, 0.0f, 1.0f, 0.0f,   // bot right
-      -0.5f, -0.5f, 0.0f, 0.0f, 0.0f}; // bot left
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
 
-  unsigned int indices[] = {
-      0, 1, 2,
-      1, 2, 3};
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+      -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+
+      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f}; // bot left
 
   unsigned int VAO; // vertex array object
   glGenVertexArrays(1, &VAO);
-  // bind Vertex Array Object
   glBindVertexArray(VAO);
 
   unsigned int VBO[1]; // vertex buffer object
@@ -90,11 +124,6 @@ int main()
   // uv coordinates
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
-
-  unsigned int EBO;
-  glGenBuffers(1, &EBO);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
   Shader program("./shaders/shader.vert", "./shaders/shader.frag");
 
@@ -147,42 +176,54 @@ int main()
   glUniform1i(glGetUniformLocation(program.id, "outTexture"), 0);
   glUniform1i(glGetUniformLocation(program.id, "outTexture2"), 1);
 
-  bool setted = false;
-  float freq = 0.1;
+  glEnable(GL_DEPTH_TEST);
+
+  glm::mat4 model = glm::mat4(1.0f);
+  glm::mat4 view = glm::mat4(1.0f);
+  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+  glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)vWidth / (float)vHeight, 0.01f, 100.0f);
+
+  glm::vec3 cubePositions[] = {
+      glm::vec3(0.0f, 0.0f, 0.0f),
+      glm::vec3(2.0f, 5.0f, -15.0f),
+      glm::vec3(-1.5f, -2.2f, -2.5f),
+      glm::vec3(-3.8f, -2.0f, -12.3f),
+      glm::vec3(2.4f, -0.4f, -3.5f),
+      glm::vec3(-1.7f, 3.0f, -7.5f),
+      glm::vec3(1.3f, -2.0f, -2.5f),
+      glm::vec3(1.5f, 2.0f, -2.5f),
+      glm::vec3(1.5f, 0.2f, -1.5f),
+      glm::vec3(-1.3f, 1.0f, -1.5f)};
 
   while (!glfwWindowShouldClose(window))
   {
     processInput(window);
     glClearColor(0.2, 0.2, 0.3, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     float elapsed = glfwGetTime();
     program.setFloat("elapsed", elapsed);
-    // program.setFloat("w", width);
-    // program.setFloat("h", height);
-    program.setFloat("mixAmount", mixAmount);
 
-    glm::mat4 xform = glm::mat4(1.0f);
-    float angle = 180.0f;
-    angle = sin(2.0f * 3.14f * freq * elapsed) * angle;
-    xform = glm::translate(xform, glm::vec3(0.5f, -0.5f, 0.0f));
-    xform = glm::rotate(xform, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
-    // xform = glm::scale(xform, glm::vec3(1.5f, 1.5f, 1.5f));
-    unsigned int transformLoc = glGetUniformLocation(program.id, "transform");
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(xform));
+    // model = glm::rotate(model, elapsed * 0.1f * glm::radians(1.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+
+    unsigned int viewLoc = glGetUniformLocation(program.id, "view");
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    unsigned int projLoc = glGetUniformLocation(program.id, "proj");
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
 
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-    //
-    xform = glm::mat4(1.0f);
-    xform = glm::translate(xform, glm::vec3(-0.5f, 0.5f, 0.0f));
-    float val = sin(2.0f * 3.14f * freq * elapsed); // constexpr
-    val = (val + 1.0f) / 2.0f;
-    glm::vec3 scaleFactor = glm::vec3(1.0f, 1.0f, 1.0f) * val;
-    xform = glm::scale(xform, scaleFactor);
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(xform));
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    for (unsigned int i = 0; i < 10; i++)
+    {
+      model = glm::mat4(1.0f);
+      model = glm::translate(model, cubePositions[i]);
+      float angle = elapsed * 20.0f * i;
+      model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+      // program.setMat4("model", model);
+      unsigned int modelLoc = glGetUniformLocation(program.id, "model");
+      glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
 
     glfwSwapBuffers(window);
     glfwPollEvents();

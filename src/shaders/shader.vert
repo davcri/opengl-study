@@ -6,12 +6,14 @@ layout(location = 1) in vec2 aTexCoord;
 out vec3 outCol;
 out vec2 texCoord;
 
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 proj;
+
 uniform float elapsed;
-uniform mat4 transform;
 
 void main() {
-  gl_Position = vec4(aPos, 1.0);
-  gl_Position = transform * gl_Position;
+  gl_Position = proj * view * model * vec4(aPos, 1.0);
   outCol = gl_Position.rgb;
   texCoord = aTexCoord;
 };
