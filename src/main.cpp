@@ -11,13 +11,17 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 float viewX = 0.0f;
 int vWidth = 800;
 int vHeight = 600;
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 cameraDir = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+
+float prevY = 0.0f;
+float prevX = 0.0f;
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height)
 {
@@ -57,7 +61,15 @@ void processInput(GLFWwindow *window)
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos)
 {
-  std::cout << xpos << "  " << ypos << std::endl;
+  float ofstY = ypos - prevY;
+  float ofstX = xpos - prevX;
+
+  float sensibility = 0.003f;
+
+  cameraDir = glm::rotate(cameraDir, -sensibility * ofstY, glm::normalize(glm::cross(cameraDir, up)));
+  cameraDir = glm::rotate(cameraDir, -sensibility * ofstX, up);
+  prevY = ypos;
+  prevX = xpos;
 }
 
 int main()
