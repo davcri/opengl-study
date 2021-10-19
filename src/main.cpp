@@ -22,6 +22,7 @@ glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
 float prevY = 0.0f;
 float prevX = 0.0f;
+float delta;
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height)
 {
@@ -40,23 +41,24 @@ void processInput(GLFWwindow *window)
   //   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
   //   // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   // }
-  float amount = 0.05f;
+  float cameraSpeed = 1.0f;
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
   {
-    cameraPos = cameraPos + cameraDir * amount;
+    cameraPos = cameraPos + cameraDir * delta * cameraSpeed;
   }
   else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
   {
-    cameraPos = cameraPos - amount * glm::normalize(glm::cross(cameraDir, up));
+    cameraPos = cameraPos - delta * cameraSpeed * glm::normalize(glm::cross(cameraDir, up));
   }
   else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
   {
-    cameraPos = cameraPos - cameraDir * amount;
+    cameraPos = cameraPos - cameraDir * delta * cameraSpeed;
   }
   else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
   {
-    cameraPos = cameraPos + amount * glm::normalize(glm::cross(cameraDir, up));
+    cameraPos = cameraPos + delta * cameraSpeed * glm::normalize(glm::cross(cameraDir, up));
   }
+  cameraPos.y = 0;
 }
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos)
@@ -64,10 +66,9 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos)
   float ofstY = ypos - prevY;
   float ofstX = xpos - prevX;
 
-  float sensibility = 0.003f;
-
-  cameraDir = glm::rotate(cameraDir, -sensibility * ofstY, glm::normalize(glm::cross(cameraDir, up)));
-  cameraDir = glm::rotate(cameraDir, -sensibility * ofstX, up);
+  float sensibility = 0.3f;
+  cameraDir = glm::rotate(cameraDir, -sensibility * delta * ofstY, glm::normalize(glm::cross(cameraDir, up)));
+  cameraDir = glm::rotate(cameraDir, -sensibility * delta * ofstX, up);
   prevY = ypos;
   prevX = xpos;
 }
@@ -237,13 +238,18 @@ int main()
                                cameraTarget,
                                up);
 
+  float prevElapsed = glfwGetTime();
+
   while (!glfwWindowShouldClose(window))
   {
+    float elapsed = glfwGetTime();
+    delta = elapsed - prevElapsed;
+
     processInput(window);
+    std::cout << delta << std::endl;
+    prevElapsed = elapsed;
     glClearColor(0.2, 0.2, 0.3, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    float elapsed = glfwGetTime();
     program.setFloat("elapsed", elapsed);
 
     cameraTarget = cameraPos + cameraDir;
