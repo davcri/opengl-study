@@ -179,8 +179,6 @@ int main()
   glEnable(GL_DEPTH_TEST);
 
   glm::mat4 model = glm::mat4(1.0f);
-  glm::mat4 view = glm::mat4(1.0f);
-  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
   float fov = 50.0f;
   glm::mat4 proj = glm::perspective(glm::radians(fov), (float)vWidth / (float)vHeight, 0.1f, 100.0f);
 
@@ -196,6 +194,17 @@ int main()
       glm::vec3(1.5f, 0.2f, -1.5f),
       glm::vec3(-1.3f, 1.0f, -1.5f)};
 
+  // camera
+  glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+  glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::vec3 cameraDir = glm::normalize((cameraPos - cameraTarget));
+  glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+  glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDir));
+  glm::vec3 cameraUp = glm::cross(cameraDir, cameraRight);
+  glm::mat4 view = glm::lookAt(cameraPos,
+                               cameraTarget,
+                               up);
+
   while (!glfwWindowShouldClose(window))
   {
     processInput(window);
@@ -207,7 +216,12 @@ int main()
 
     // model = glm::rotate(model, elapsed * 0.1f * glm::radians(1.0f), glm::vec3(0.5f, 1.0f, 0.0f));
     proj = glm::perspective(glm::radians(fov), (float)vWidth / (float)vHeight, 0.01f, 100.0f);
-    view = glm::translate(view, glm::vec3(viewX, 0.0, 0.0));
+    cameraPos.x = 3 * cos(2 * M_PI * 0.25 * elapsed);
+    cameraPos.z = 3 * sin(2 * M_PI * 0.25 * elapsed);
+
+    view = glm::lookAt(cameraPos,
+                       cameraTarget,
+                       up);
     unsigned int viewLoc = glGetUniformLocation(program.id, "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     unsigned int projLoc = glGetUniformLocation(program.id, "proj");
