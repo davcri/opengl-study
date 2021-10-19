@@ -15,6 +15,9 @@
 float viewX = 0.0f;
 int vWidth = 800;
 int vHeight = 600;
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraDir = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height)
 {
@@ -25,17 +28,36 @@ void framebufferSizeCallback(GLFWwindow *window, int width, int height)
 
 void processInput(GLFWwindow *window)
 {
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+  if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
 
-  if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+  // if (glfwGetKey(window, GLFW_KEY_E == GLFW_PRESS))
+  // {
+  //   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+  //   // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  // }
+  float amount = 0.05f;
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
   {
-    viewX += 0.01f;
+    cameraPos = cameraPos + cameraDir * amount;
   }
-  else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+  else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
   {
-    viewX -= 0.01f;
+    cameraPos = cameraPos - amount * glm::normalize(glm::cross(cameraDir, up));
   }
+  else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+  {
+    cameraPos = cameraPos - cameraDir * amount;
+  }
+  else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+  {
+    cameraPos = cameraPos + amount * glm::normalize(glm::cross(cameraDir, up));
+  }
+}
+
+void mouse_callback(GLFWwindow *window, double xpos, double ypos)
+{
+  std::cout << xpos << "  " << ypos << std::endl;
 }
 
 int main()
@@ -56,6 +78,8 @@ int main()
     glfwTerminate();
     return -1;
   }
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  glfwSetCursorPosCallback(window, mouse_callback);
   glfwMakeContextCurrent(window);
 
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -195,12 +219,8 @@ int main()
       glm::vec3(-1.3f, 1.0f, -1.5f)};
 
   // camera
-  glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-  glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-  glm::vec3 cameraDir = glm::normalize((cameraPos - cameraTarget));
-  glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-  glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDir));
-  glm::vec3 cameraUp = glm::cross(cameraDir, cameraRight);
+  glm::vec3 cameraTarget = cameraPos + cameraDir;
+
   glm::mat4 view = glm::lookAt(cameraPos,
                                cameraTarget,
                                up);
@@ -214,11 +234,9 @@ int main()
     float elapsed = glfwGetTime();
     program.setFloat("elapsed", elapsed);
 
+    cameraTarget = cameraPos + cameraDir;
     // model = glm::rotate(model, elapsed * 0.1f * glm::radians(1.0f), glm::vec3(0.5f, 1.0f, 0.0f));
     proj = glm::perspective(glm::radians(fov), (float)vWidth / (float)vHeight, 0.01f, 100.0f);
-    cameraPos.x = 3 * cos(2 * M_PI * 0.25 * elapsed);
-    cameraPos.z = 3 * sin(2 * M_PI * 0.25 * elapsed);
-
     view = glm::lookAt(cameraPos,
                        cameraTarget,
                        up);
