@@ -22,6 +22,14 @@ https://user-images.githubusercontent.com/6860637/135067696-e2412181-d7ed-4731-8
 
 https://user-images.githubusercontent.com/6860637/135759393-e61aa497-18e6-452b-8b53-cd2ffe7742a7.mp4
 
+### [Studiando OpenGL #4 - Sistemi di coordinate](https://www.twitch.tv/videos/1176612944)
+
+https://user-images.githubusercontent.com/6860637/138547458-10ae4fac-cece-4f8b-870e-11dae7b8a2ea.mp4
+
+### [Studiando OpenGL #5 - Camera](https://www.twitch.tv/videos/1176612944)
+
+https://user-images.githubusercontent.com/6860637/138547417-155d5c9a-da46-4faf-986a-fbceb29aa59c.mp4
+
 ## Exercises
 
 - [hello-triangle-exercise-2](https://github.com/davcri/opengl-study/releases/tag/hello-triangle-exercise-2)
