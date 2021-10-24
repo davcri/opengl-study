@@ -16,7 +16,7 @@
 float viewX = 0.0f;
 int vWidth = 800;
 int vHeight = 600;
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 6.0f);
 glm::vec3 cameraDir = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -67,8 +67,8 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos)
   float ofstX = xpos - prevX;
 
   float sensibility = 0.3f;
-  cameraDir = glm::rotate(cameraDir, -sensibility * delta * ofstY, glm::normalize(glm::cross(cameraDir, up)));
-  cameraDir = glm::rotate(cameraDir, -sensibility * delta * ofstX, up);
+  // cameraDir = glm::rotate(cameraDir, -sensibility * delta * ofstY, glm::normalize(glm::cross(cameraDir, up)));
+  // cameraDir = glm::rotate(cameraDir, -sensibility * delta * ofstX, up);
   prevY = ypos;
   prevX = xpos;
 }
@@ -91,7 +91,7 @@ int main()
     glfwTerminate();
     return -1;
   }
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glfwSetCursorPosCallback(window, mouse_callback);
   glfwMakeContextCurrent(window);
 
@@ -158,60 +158,18 @@ int main()
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
-  // uv coordinates
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
-  glEnableVertexAttribArray(1);
+
+  unsigned int lightVAO;
+  glGenVertexArrays(1, &lightVAO);
+  glBindVertexArray(lightVAO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
+  glEnableVertexAttribArray(0);
 
   Shader program("./shaders/shader.vert", "./shaders/shader.frag");
+  Shader lightShader("./shaders/light.vert", "./shaders/light.frag");
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
-
-  unsigned int texture;
-  glGenTextures(1, &texture);
-  glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
-  glBindTexture(GL_TEXTURE_2D, texture);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  stbi_set_flip_vertically_on_load(true);
-
-  // loading texture
-  int width, height, nrChannels;
-  unsigned char *data = stbi_load("./assets/Preview.jpg", &width, &height, &nrChannels, 0);
-  if (data)
-  {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    stbi_image_free(data);
-  }
-  else
-  {
-    std::cout << "ERROR::Loading texture failed" << std::endl;
-    return -1;
-  }
-
-  unsigned int texture2;
-  glGenTextures(1, &texture2);
-  glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, texture2);
-  int width2, height2, nrChannels2;
-  unsigned char *data2 = stbi_load("./assets/awesomeface.png", &width2, &height2, &nrChannels2, 0);
-  if (data2)
-  {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width2, height2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data2);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    stbi_image_free(data2);
-  }
-  else
-  {
-    std::cout << "ERROR::Loading texture failed" << std::endl;
-    return -1;
-  }
-
-  program.use();
-  glUniform1i(glGetUniformLocation(program.id, "outTexture"), 0);
-  glUniform1i(glGetUniformLocation(program.id, "outTexture2"), 1);
 
   glEnable(GL_DEPTH_TEST);
 
@@ -240,20 +198,26 @@ int main()
 
   float prevElapsed = glfwGetTime();
 
+  // lights
+  glm::vec3 lightPos(2.0f, 1.0f, 2.0f);
+  program.use();
+  program.setVec3("lightCol", 1.0f, 1.0f, 1.0f);
+  program.setVec3("objCol", 1.0f, .5f, .5f);
+
+  // lightShader.use();
+
   while (!glfwWindowShouldClose(window))
   {
     float elapsed = glfwGetTime();
     delta = elapsed - prevElapsed;
 
     processInput(window);
-    std::cout << delta << std::endl;
     prevElapsed = elapsed;
     glClearColor(0.2, 0.2, 0.3, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     program.setFloat("elapsed", elapsed);
 
     cameraTarget = cameraPos + cameraDir;
-    // model = glm::rotate(model, elapsed * 0.1f * glm::radians(1.0f), glm::vec3(0.5f, 1.0f, 0.0f));
     proj = glm::perspective(glm::radians(fov), (float)vWidth / (float)vHeight, 0.01f, 100.0f);
     view = glm::lookAt(cameraPos,
                        cameraTarget,
@@ -263,15 +227,31 @@ int main()
     unsigned int projLoc = glGetUniformLocation(program.id, "proj");
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
 
-    glBindVertexArray(VAO);
+    lightShader.use();
+    glBindVertexArray(lightVAO);
 
-    for (unsigned int i = 0; i < 10; i++)
+    viewLoc = glGetUniformLocation(lightShader.id, "view");
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    projLoc = glGetUniformLocation(lightShader.id, "proj");
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+
+    // light
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, lightPos);
+    model = glm::scale(model, glm::vec3(0.2f));
+    unsigned int modelLoc = glGetUniformLocation(lightShader.id, "model");
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // cubes
+    program.use();
+    glBindVertexArray(VAO);
+    for (unsigned int i = 0; i < 1; i++)
     {
       model = glm::mat4(1.0f);
       model = glm::translate(model, cubePositions[i]);
       float angle = elapsed * 20.0f * i;
       model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-      // program.setMat4("model", model);
       unsigned int modelLoc = glGetUniformLocation(program.id, "model");
       glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
       glDrawArrays(GL_TRIANGLES, 0, 36);
