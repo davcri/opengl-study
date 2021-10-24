@@ -8,6 +8,7 @@ uniform mat4 proj;
 
 uniform vec3 objCol;
 uniform vec3 lightCol;
+uniform float ambientLightStrength;
 
 uniform float elapsed;
 

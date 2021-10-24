@@ -10,12 +10,6 @@ include_directories(libs/shader)
 include_directories(libs/stb_image)
 include_directories(libs/glm-0.9.9.8)
 
-option(USE_MYMATH "Use tutorial provided math implementation" ON)
-if(USE_MYMATH)
-  add_subdirectory(libs/math)  
-  list(APPEND EXTRA_LIBS Math)
-endif()
-
 # GLFW
 add_subdirectory(libs/glfw-3.3.4)
 include_directories(libs/glfw-3.3.4/include)
