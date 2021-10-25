@@ -32,13 +32,6 @@ https://user-images.githubusercontent.com/6860637/138547417-155d5c9a-da46-4faf-9
 
 ## Exercises
 
-- [hello-triangle-exercise-2](https://github.com/davcri/opengl-study/releases/tag/hello-triangle-exercise-2)
-- [hello-triangle-exercise-3](https://github.com/davcri/opengl-study/releases/tag/hello-triangle-exercise-3)
-- [shader-exercise-1](https://github.com/davcri/opengl-study/releases/tag/shader-exercise-1)
-- [shader-exercise-2](https://github.com/davcri/opengl-study/releases/tag/shader-exercise-2)
-- [shader-exercise-3](https://github.com/davcri/opengl-study/releases/tag/shader-exercise-1)
-- [texture-exercise-1](https://github.com/davcri/opengl-study/releases/tag/texture-exercise-1)
-- [texture-exercise-2](https://github.com/davcri/opengl-study/releases/tag/texture-exercise-2)
-- [texture-exercise-3](https://github.com/davcri/opengl-study/releases/tag/texture-exercise-3)
-- [transformations-exercise-1](https://github.com/davcri/opengl-study/releases/tag/transformations-exercise-1)
-- [transformations-exercise-2](https://github.com/davcri/opengl-study/releases/tag/transformations-exercise-2)
+```sh
+git log | grep -B 4 exercise
+```
