@@ -90,7 +90,7 @@ int main()
     glfwTerminate();
     return -1;
   }
-  // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glfwSetCursorPosCallback(window, mouse_callback);
   glfwMakeContextCurrent(window);
 
@@ -167,7 +167,7 @@ int main()
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
 
-  Shader program("./shaders/shader.vert", "./shaders/shader.frag");
+  Shader objShader("./shaders/shader.vert", "./shaders/shader.frag");
   Shader lightShader("./shaders/light.vert", "./shaders/light.frag");
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
@@ -192,11 +192,11 @@ int main()
   glm::vec3 lightCol(0.4f, 0.4f, 1.0f);
   glm::vec3 objectCol(1.0f, 1.0f, 1.0f);
 
-  program.use();
-  program.setVec3("objCol", objectCol);
-  program.setVec3("lightCol", lightCol);
-  program.setFloat("lightStrength", lightStrength);
-  program.setVec3("lightPos", lightPos);
+  objShader.use();
+  objShader.setVec3("objCol", objectCol);
+  objShader.setVec3("lightCol", lightCol);
+  objShader.setFloat("lightStrength", lightStrength);
+  objShader.setVec3("lightPos", lightPos);
   lightShader.use();
   lightShader.setVec3("lightCol", lightCol);
   lightShader.setFloat("lightStrength", lightStrength);
@@ -225,7 +225,7 @@ int main()
     // light shader
     lightShader.use();
     glBindVertexArray(lightVAO);
-    lightPos.x = .5 + 3.0 * (sin(2.0 * M_PI * .4 * elapsed) + 1.0) / 2.0;
+    lightPos.x = .5 + 3.0 * (sin(2.0 * M_PI * .3 * elapsed) + 1.0) / 2.0;
     model = glm::mat4(1.0f);
     model = glm::translate(model, lightPos);
     model = glm::scale(model, glm::vec3(0.2f));
@@ -236,19 +236,20 @@ int main()
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
     // cubes
-    program.use();
+    objShader.use();
     glBindVertexArray(VAO);
-    program.setFloat("elapsed", elapsed);
-    program.setVec3("lightPos", lightPos);
-    program.setMat4("view", view);
-    program.setMat4("proj", proj);
+    objShader.setFloat("elapsed", elapsed);
+    objShader.setVec3("lightPos", lightPos);
+    objShader.setMat4("view", view);
+    objShader.setVec3("viewPos", camera.Position);
+    objShader.setMat4("proj", proj);
     for (unsigned int i = 0; i < 10; i++)
     {
       model = glm::mat4(1.0f);
       model = glm::translate(model, cubePositions[i]);
       float angle = elapsed * 20.0f * i;
       model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-      program.setMat4("model", model);
+      objShader.setMat4("model", model);
       glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 
