@@ -10,13 +10,6 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 proj;
 
-uniform vec3 objCol;
-// lights
-uniform vec3 lightCol;
-uniform vec3 lightPos;
-uniform float lightStrength;
-uniform vec3 viewPos;
-
 uniform float elapsed;
 
 void main() {

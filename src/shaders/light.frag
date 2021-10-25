@@ -1,11 +1,9 @@
 #version 330 core
 
-uniform vec3 lightCol;
-uniform float lightStrength;
+vec3 lightCol = vec3(1.0, 1.0, 1.0);
 
 out vec4 FragColor;
 
 void main() {
-    vec3 light = lightStrength * lightCol;
-    FragColor = vec4(light, 1.0);
+    FragColor = vec4(lightCol, 1.0);
 };

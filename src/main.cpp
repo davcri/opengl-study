@@ -187,19 +187,20 @@ int main()
       glm::vec3(-1.3f, 1.0f, -1.5f)};
 
   // lights
-  float lightStrength = 0.5f;
   glm::vec3 lightPos(2.0f, 0.0f, 0.0f);
-  glm::vec3 lightCol(0.4f, 0.4f, 1.0f);
-  glm::vec3 objectCol(1.0f, 1.0f, 1.0f);
+  glm::vec3 lightCol(1.0f, 1.0f, 1.0f);
 
   objShader.use();
-  objShader.setVec3("objCol", objectCol);
-  objShader.setVec3("lightCol", lightCol);
-  objShader.setFloat("lightStrength", lightStrength);
-  objShader.setVec3("lightPos", lightPos);
+  objShader.setVec3("light.position", lightPos);
+  objShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+  objShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+  objShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+  objShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+  objShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+  objShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+  objShader.setFloat("material.shininess", 32.0f);
+
   lightShader.use();
-  lightShader.setVec3("lightCol", lightCol);
-  lightShader.setFloat("lightStrength", lightStrength);
   lightShader.setVec3("lightPos", lightPos);
 
   camera.Front = glm::vec3(0.0f, 0.0, -1.0f);
@@ -229,7 +230,6 @@ int main()
     model = glm::mat4(1.0f);
     model = glm::translate(model, lightPos);
     model = glm::scale(model, glm::vec3(0.2f));
-    lightShader.setVec3("lightPos", lightPos);
     lightShader.setMat4("view", view);
     lightShader.setMat4("proj", proj);
     lightShader.setMat4("model", model);
@@ -239,7 +239,7 @@ int main()
     objShader.use();
     glBindVertexArray(VAO);
     objShader.setFloat("elapsed", elapsed);
-    objShader.setVec3("lightPos", lightPos);
+    objShader.setVec3("light.position", lightPos);
     objShader.setMat4("view", view);
     objShader.setVec3("viewPos", camera.Position);
     objShader.setMat4("proj", proj);
