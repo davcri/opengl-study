@@ -1,12 +1,11 @@
 #version 330 core
 
-uniform vec3 ambientLightCol;
-uniform float ambientLightStrength;
-// uniform float elapsed;
+uniform vec3 lightCol;
+uniform float lightStrength;
 
 out vec4 FragColor;
 
 void main() {
-    vec3 ambientLight = ambientLightStrength * ambientLightCol;
-    FragColor = vec4(ambientLight, 1.0);
+    vec3 light = lightStrength * lightCol;
+    FragColor = vec4(light, 1.0);
 };

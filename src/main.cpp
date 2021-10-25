@@ -52,7 +52,7 @@ void processInput(GLFWwindow *window)
   {
     camera.ProcessKeyboard(RIGHT, delta);
   }
-  camera.Position.y = 0;
+  // camera.Position.y = 0;
 }
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos)
@@ -90,7 +90,7 @@ int main()
     glfwTerminate();
     return -1;
   }
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glfwSetCursorPosCallback(window, mouse_callback);
   glfwMakeContextCurrent(window);
 
@@ -105,47 +105,47 @@ int main()
   // framebufferSizeCallback(window, 800, 600);
 
   float vertices[] = {
-      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-      0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+      0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+      0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+      0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+      -0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
 
-      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-      0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-      0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-      -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
-      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+      0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+      0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+      0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+      -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
 
-      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-      -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-      -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
+      -0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
 
-      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-      0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-      0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-      0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
 
-      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-      0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-      0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
+      0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
 
-      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-      0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-      0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-      -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
-      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f}; // bot left
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+      0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f}; // bot left
 
   unsigned int VAO; // vertex array object
   glGenVertexArrays(1, &VAO);
@@ -155,14 +155,16 @@ int main()
   glGenBuffers(1, VBO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(sizeof(float) * 3));
+  glEnableVertexAttribArray(1);
 
   unsigned int lightVAO;
   glGenVertexArrays(1, &lightVAO);
   glBindVertexArray(lightVAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
 
   Shader program("./shaders/shader.vert", "./shaders/shader.frag");
@@ -185,18 +187,20 @@ int main()
       glm::vec3(-1.3f, 1.0f, -1.5f)};
 
   // lights
-  glm::vec3 lightPos(2.0f, 1.0f, 2.0f);
-  glm::vec3 ambientLightCol(0.5f, 0.0f, 1.0f);
-  float ambientLightStrength = 1.0f;
-  glm::vec3 objectCol(0.5f, 0.5f, 0.5f);
+  float lightStrength = 0.5f;
+  glm::vec3 lightPos(2.0f, 0.0f, 0.0f);
+  glm::vec3 lightCol(0.4f, 0.4f, 1.0f);
+  glm::vec3 objectCol(1.0f, 1.0f, 1.0f);
 
   program.use();
-  program.setVec3("ambientLightCol", ambientLightCol);
-  program.setFloat("ambientLightStrength", ambientLightStrength);
   program.setVec3("objCol", objectCol);
+  program.setVec3("lightCol", lightCol);
+  program.setFloat("lightStrength", lightStrength);
+  program.setVec3("lightPos", lightPos);
   lightShader.use();
-  lightShader.setVec3("ambientLightCol", ambientLightCol);
-  lightShader.setFloat("ambientLightStrength", ambientLightStrength);
+  lightShader.setVec3("lightCol", lightCol);
+  lightShader.setFloat("lightStrength", lightStrength);
+  lightShader.setVec3("lightPos", lightPos);
 
   camera.Front = glm::vec3(0.0f, 0.0, -1.0f);
   glm::mat4 view = camera.GetViewMatrix();
@@ -221,11 +225,11 @@ int main()
     // light shader
     lightShader.use();
     glBindVertexArray(lightVAO);
-    ambientLightStrength = (sin(elapsed) + 1) / 2.0f;
+    lightPos.x = .5 + 3.0 * (sin(2.0 * M_PI * .4 * elapsed) + 1.0) / 2.0;
     model = glm::mat4(1.0f);
     model = glm::translate(model, lightPos);
     model = glm::scale(model, glm::vec3(0.2f));
-    lightShader.setFloat("ambientLightStrength", ambientLightStrength);
+    lightShader.setVec3("lightPos", lightPos);
     lightShader.setMat4("view", view);
     lightShader.setMat4("proj", proj);
     lightShader.setMat4("model", model);
@@ -235,10 +239,10 @@ int main()
     program.use();
     glBindVertexArray(VAO);
     program.setFloat("elapsed", elapsed);
-    program.setFloat("ambientLightStrength", ambientLightStrength);
+    program.setVec3("lightPos", lightPos);
     program.setMat4("view", view);
     program.setMat4("proj", proj);
-    for (unsigned int i = 0; i < 5; i++)
+    for (unsigned int i = 0; i < 10; i++)
     {
       model = glm::mat4(1.0f);
       model = glm::translate(model, cubePositions[i]);
