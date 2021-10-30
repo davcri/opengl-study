@@ -39,9 +39,13 @@ void main() {
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, n);
     float specularAmount = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-
-    vec3 specular = specularAmount * vec3(texture(material.specularMap, TexCoords));
+    vec3 specularIntensityFromTexture = vec3(texture(material.specularMap, TexCoords));
+    vec3 mapOut = vec3(1.0, 1.0, 1.0) - specularIntensityFromTexture;
+    vec3 specular = specularAmount * vec3(pow(mapOut.x, 6), pow(mapOut.y, 6), pow(mapOut.z, 6));
+    
+    // ambient
     vec3 ambient = light.ambient * vec3(texture(material.diffuseMap, TexCoords));
-    FragColor = vec4(ambient + diffuse + specular, 1.0);
+
+    FragColor = vec4(ambient + specular + diffuse, 1.0);
     
 };
