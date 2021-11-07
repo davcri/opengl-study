@@ -242,13 +242,16 @@ int main()
   glm::vec3 lightCol(1.0f, 1.0f, 1.0f);
 
   objShader.use();
-  objShader.setVec3("light.position", lightPos);
+  objShader.setVec3("light.position", camera.Position);
+  objShader.setVec3("light.direction", camera.Front);
   objShader.setFloat("light.constant", 1.0);
   objShader.setFloat("light.linear", 0.09f);
   objShader.setFloat("light.quadratic", 0.032f);
+  objShader.setFloat("light.cutoff", glm::cos(glm::radians(20.0f)));
+  objShader.setFloat("light.outerCutoff", glm::cos(glm::radians(15.0f)));
   // objShader.setVec3("light.direction", -lightPos);
-  objShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-  objShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+  objShader.setVec3("light.ambient", 0.4f, 0.4f, 0.4f);
+  objShader.setVec3("light.diffuse", 0.65f, 0.65f, 0.65f); // darken diffuse light a bit
   objShader.setVec3("light.specular", 0.5f, 0.5f, 0.5f);
   objShader.setVec3("material.ambient", 0.5f, 0.5f, 0.31f);
   objShader.setVec3("material.diffuse", 0.5f, 0.5f, 0.31f);
@@ -296,7 +299,8 @@ int main()
     objShader.use();
     glBindVertexArray(VAO);
     objShader.setFloat("elapsed", elapsed);
-    objShader.setVec3("light.position", lightPos);
+    objShader.setVec3("light.position", camera.Position);
+    objShader.setVec3("light.direction", camera.Front);
     objShader.setMat4("view", view);
     objShader.setVec3("viewPos", camera.Position);
     objShader.setMat4("proj", proj);
