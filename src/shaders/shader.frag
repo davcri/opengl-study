@@ -12,8 +12,8 @@ struct Material {
 };
 
 struct Light {
-    // vec3 position;
-    vec3 direction;
+    vec3 position;
+    // vec3 direction;
 
     vec3 ambient;
     vec3 diffuse;
@@ -33,16 +33,17 @@ uniform vec3 viewPos;
 void main() {
     // diffuse
     vec3 n = normalize(Normal);
-    vec3 lightDir = normalize(-light.direction);
+    float lightDistance = length(light.position - FragPos);
+    vec3 lightDir = normalize(light.position - FragPos);
     float diffuseAmount = max(dot(n, lightDir), 0.0);
-    vec3 diffuse = light.diffuse * diffuseAmount * vec3(texture(material.diffuseMap, TexCoords));
+    vec3 diffuse = (light.diffuse * diffuseAmount * vec3(texture(material.diffuseMap, TexCoords))) / lightDistance;
     
     // specular
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, n);
     float specularAmount = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specularIntensityFromTexture = vec3(texture(material.specularMap, TexCoords));
-    vec3 specular = specularAmount * vec3(TexCoords, 0.0) * specularIntensityFromTexture;
+    vec3 specular = (specularAmount * vec3(TexCoords, 0.0) * specularIntensityFromTexture) / lightDistance;
 
     // ambient
     vec3 ambient = light.ambient * vec3(texture(material.diffuseMap, TexCoords));
