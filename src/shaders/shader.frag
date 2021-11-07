@@ -46,7 +46,7 @@ void main() {
     vec3 ambient = light.ambient * vec3(texture(material.diffuseMap, TexCoords));
 
     // emission
-    vec3 emission = specularIntensityFromTexture * vec3(texture(material.emissionMap, TexCoords));
+    vec3 emission = vec3(texture(material.emissionMap, TexCoords));
 
     vec3 outCol = ambient + specular + diffuse + emission;
     FragColor = vec4(outCol, 1.0);
