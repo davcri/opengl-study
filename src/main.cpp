@@ -242,7 +242,11 @@ int main()
   glm::vec3 lightCol(1.0f, 1.0f, 1.0f);
 
   objShader.use();
-  objShader.setVec3("light.direction", -lightPos);
+  objShader.setVec3("light.position", lightPos);
+  objShader.setFloat("light.constant", 1.0);
+  objShader.setFloat("light.linear", 0.09f);
+  objShader.setFloat("light.quadratic", 0.032f);
+  // objShader.setVec3("light.direction", -lightPos);
   objShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
   objShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
   objShader.setVec3("light.specular", 0.5f, 0.5f, 0.5f);

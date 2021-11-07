@@ -18,6 +18,10 @@ struct Light {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
 };
 
 in vec3 Normal;
@@ -33,20 +37,21 @@ uniform vec3 viewPos;
 void main() {
     // diffuse
     vec3 n = normalize(Normal);
-    float lightDistance = length(light.position - FragPos);
+    float distance = length(light.position - FragPos);
     vec3 lightDir = normalize(light.position - FragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * pow(distance, 2));
     float diffuseAmount = max(dot(n, lightDir), 0.0);
-    vec3 diffuse = (light.diffuse * diffuseAmount * vec3(texture(material.diffuseMap, TexCoords))) / lightDistance;
+    vec3 diffuse = attenuation * (light.diffuse * diffuseAmount * vec3(texture(material.diffuseMap, TexCoords)));
     
     // specular
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, n);
     float specularAmount = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specularIntensityFromTexture = vec3(texture(material.specularMap, TexCoords));
-    vec3 specular = (specularAmount * vec3(TexCoords, 0.0) * specularIntensityFromTexture) / lightDistance;
+    vec3 specular = attenuation * (specularAmount * vec3(TexCoords, 0.0) * specularIntensityFromTexture);
 
     // ambient
-    vec3 ambient = light.ambient * vec3(texture(material.diffuseMap, TexCoords));
+    vec3 ambient = attenuation * light.ambient * vec3(texture(material.diffuseMap, TexCoords));
 
     // emission
     // vec3 emission = vec3(texture(material.emissionMap, TexCoords));
