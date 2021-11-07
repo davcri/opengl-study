@@ -214,8 +214,9 @@ int main()
   float textureDiffuseMapId = loadTexture("./assets/container2.png");
   glActiveTexture(GL_TEXTURE1);
   float textureSpecularMapId = loadTexture("./assets/container2_specular.png");
-  glActiveTexture(GL_TEXTURE2);
-  loadTexture("./assets/matrix.jpg");
+  // emission map
+  // glActiveTexture(GL_TEXTURE2);
+  // loadTexture("./assets/matrix.jpg");
 
   Shader objShader("./shaders/shader.vert", "./shaders/shader.frag");
   Shader lightShader("./shaders/light.vert", "./shaders/light.frag");
@@ -241,17 +242,16 @@ int main()
   glm::vec3 lightCol(1.0f, 1.0f, 1.0f);
 
   objShader.use();
-  objShader.setVec3("light.position", lightPos);
+  objShader.setVec3("light.direction", -lightPos);
   objShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
   objShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f); // darken diffuse light a bit
-  objShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-  objShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-  objShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+  objShader.setVec3("light.specular", 0.5f, 0.5f, 0.5f);
+  objShader.setVec3("material.ambient", 0.5f, 0.5f, 0.31f);
+  objShader.setVec3("material.diffuse", 0.5f, 0.5f, 0.31f);
   objShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
   objShader.setFloat("material.shininess", 32.0f);
   objShader.setInt("material.diffuseMap", 0);
   objShader.setInt("material.specularMap", 1);
-  objShader.setInt("material.emissionMap", 2);
 
   lightShader.use();
   lightShader.setVec3("lightPos", lightPos);

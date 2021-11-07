@@ -12,7 +12,9 @@ struct Material {
 };
 
 struct Light {
-    vec3 position;
+    // vec3 position;
+    vec3 direction;
+
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -31,7 +33,7 @@ uniform vec3 viewPos;
 void main() {
     // diffuse
     vec3 n = normalize(Normal);
-    vec3 lightDir = normalize(light.position - FragPos);
+    vec3 lightDir = normalize(-light.direction);
     float diffuseAmount = max(dot(n, lightDir), 0.0);
     vec3 diffuse = light.diffuse * diffuseAmount * vec3(texture(material.diffuseMap, TexCoords));
     
@@ -46,9 +48,9 @@ void main() {
     vec3 ambient = light.ambient * vec3(texture(material.diffuseMap, TexCoords));
 
     // emission
-    vec3 emission = vec3(texture(material.emissionMap, TexCoords));
+    // vec3 emission = vec3(texture(material.emissionMap, TexCoords));
 
-    vec3 outCol = ambient + specular + diffuse + emission;
+    vec3 outCol = ambient + specular + diffuse;
     FragColor = vec4(outCol, 1.0);
     
 };
