@@ -21,6 +21,7 @@ bool isFirstMouseMovement = true;
 float prevY = 0.0f;
 float prevX = 0.0f;
 float delta;
+float fov = 50.0f;
 
 Camera camera = Camera(glm::vec3(0, 0, 3), glm::vec3(0, 1, 0));
 
@@ -241,22 +242,48 @@ int main()
   glm::vec3 lightPos(2.0f, 0.0f, 0.0f);
   glm::vec3 lightCol(1.0f, 1.0f, 1.0f);
 
+  glm::vec3 pointLightPositions[] = {
+      glm::vec3(0.7f - 2.0f, 0.2f, 2.0f),
+      glm::vec3(2.3f - 2.0f, -3.3f, -4.0f),
+      glm::vec3(-4.0f - 2.0f, 2.0f, -12.0f),
+      glm::vec3(0.0f - 2.0f, 0.0f, -3.0f)};
+
   objShader.use();
-  objShader.setVec3("light.position", camera.Position);
-  objShader.setVec3("light.direction", camera.Front);
-  objShader.setFloat("light.constant", 1.0);
-  objShader.setFloat("light.linear", 0.09f);
-  objShader.setFloat("light.quadratic", 0.032f);
-  objShader.setFloat("light.cutoff", glm::cos(glm::radians(20.0f)));
-  objShader.setFloat("light.outerCutoff", glm::cos(glm::radians(15.0f)));
+  objShader.setVec3("dirLight.direction", -lightPos);
+  objShader.setVec3("dirLight.ambient", 0.1f, 0.1f, 0.1f);
+  objShader.setVec3("dirLight.diffuse", 0.1f, 0.1f, 0.1f); // darken diffuse light a bit
+  objShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+
+  for (int i = 0; i < 4; i++)
+  {
+    objShader.use();
+    char buffer[64];
+    sprintf(buffer, "pointLights[%i].position", i);
+    objShader.setVec3(buffer, pointLightPositions[i]);
+    sprintf(buffer, "pointLights[%i].constant", i);
+    objShader.setFloat(buffer, 1.0);
+    sprintf(buffer, "pointLights[%i].linear", i);
+    objShader.setFloat(buffer, 0.08f);
+    sprintf(buffer, "pointLights[%i].quadratic", i);
+    objShader.setFloat(buffer, 0.0032f);
+
+    sprintf(buffer, "pointLights[%i].ambient", i);
+    objShader.setVec3(buffer, 0.15f, 0.15f, 0.15f);
+    sprintf(buffer, "pointLights[%i].diffuse", i);
+    objShader.setVec3(buffer, 0.75f, 0.75f, 0.75f);
+    sprintf(buffer, "pointLights[%i].specular", i);
+    objShader.setVec3(buffer, 1.0f, 1.0f, 1.0f);
+  }
+
+  // objShader.setVec3("light.direction", camera.Front);
+  // objShader.setFloat("light.cutoff", glm::cos(glm::radians(20.0f)));
+  // objShader.setFloat("light.outerCutoff", glm::cos(glm::radians(15.0f)));
   // objShader.setVec3("light.direction", -lightPos);
-  objShader.setVec3("light.ambient", 0.4f, 0.4f, 0.4f);
-  objShader.setVec3("light.diffuse", 0.65f, 0.65f, 0.65f); // darken diffuse light a bit
-  objShader.setVec3("light.specular", 0.5f, 0.5f, 0.5f);
+
   objShader.setVec3("material.ambient", 0.5f, 0.5f, 0.31f);
   objShader.setVec3("material.diffuse", 0.5f, 0.5f, 0.31f);
   objShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-  objShader.setFloat("material.shininess", 32.0f);
+  objShader.setFloat("material.shininess", 1.0f);
   objShader.setInt("material.diffuseMap", 0);
   objShader.setInt("material.specularMap", 1);
 
@@ -278,22 +305,9 @@ int main()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // projection
-    float fov = 50.0f;
     glm::mat4 proj = glm::perspective(glm::radians(fov), (float)vWidth / (float)vHeight, 0.1f, 100.0f);
     proj = glm::perspective(glm::radians(fov), (float)vWidth / (float)vHeight, 0.01f, 100.0f);
     view = camera.GetViewMatrix();
-
-    // light shader
-    lightShader.use();
-    glBindVertexArray(lightVAO);
-    lightPos.x = .5 + 3.0 * (sin(2.0 * M_PI * .3 * elapsed) + 1.0) / 2.0;
-    model = glm::mat4(1.0f);
-    model = glm::translate(model, lightPos);
-    model = glm::scale(model, glm::vec3(0.2f));
-    lightShader.setMat4("view", view);
-    lightShader.setMat4("proj", proj);
-    lightShader.setMat4("model", model);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
 
     // cubes
     objShader.use();
@@ -311,6 +325,19 @@ int main()
       float angle = elapsed * 20.0f * i;
       model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
       objShader.setMat4("model", model);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+      lightShader.use();
+      glBindVertexArray(lightVAO);
+      model = glm::mat4(1.0f);
+      model = glm::translate(model, pointLightPositions[i]);
+      model = glm::scale(model, glm::vec3(0.15f));
+      lightShader.setMat4("view", view);
+      lightShader.setMat4("proj", proj);
+      lightShader.setMat4("model", model);
       glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 
