@@ -17,6 +17,12 @@ list(APPEND EXTRA_LIBS glfw)
 list(APPEND EXTRA_LIBS ${glfw_LIBRARIES})
 # list(APPEND EXTRA_LIBS ${OPENGL_LIBRARY}) 
 
+# assimp
+add_subdirectory(libs/assimp-5.0.1)
+include_directories(libs/assimp-5.0.1/include)
+list(APPEND EXTRA_LIBS assimp)
+# list(APPEND EXTRA_LIBS ${glfw_LIBRARIES})
+
 # GLAD
 include_directories(libs/glad/include)
 
