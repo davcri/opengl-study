@@ -137,7 +137,7 @@ int main()
     glfwTerminate();
     return -1;
   }
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glfwSetCursorPosCallback(window, mouse_callback);
   glfwMakeContextCurrent(window);
 
@@ -147,9 +147,9 @@ int main()
     return -1;
   }
 
-  glViewport(0, 0, vWidth, vHeight);
+  // glfwGetFramebufferSize(window, &vWidth, &vHeight);
+  // glViewport(0, 0, vWidth, vHeight);
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-  // framebufferSizeCallback(window, 800, 600);
 
   stbi_set_flip_vertically_on_load(true);
   Model modelFromAssimp("./assets/backpack/backpack.obj");
