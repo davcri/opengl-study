@@ -24,3 +24,7 @@ Get a list of tags using:
 ```sh
 git log | grep -B 4 exercise
 ```
+
+## Useful readings
+
+- https://google.github.io/styleguide/cppguide.html

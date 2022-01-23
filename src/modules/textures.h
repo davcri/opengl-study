@@ -1,9 +1,11 @@
+#ifndef FUOCO_MODULES_TEXTURES_H
+#define FUOCO_MODULES_TEXTURES_H
 #define STB_IMAGE_IMPLEMENTATION
+
+#include <iostream>
 
 #include "stb_image.h"
 #include "glad/glad.h"
-
-#include <iostream>
 
 class TextureLoader
 {
@@ -55,3 +57,5 @@ public:
         return textureID;
     }
 };
+
+#endif

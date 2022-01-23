@@ -1,5 +1,5 @@
-#ifndef MODEL_H
-#define MODEL_H
+#ifndef FUOCO_MODULES_MODEL_H_
+#define FUOCO_MODULES_MODEL_H_
 
 #include <string>
 #include <fstream>
@@ -17,7 +17,7 @@ using namespace std;
 #include "assimp/postprocess.h"
 #include "stb_image.h"
 
-#include "Mesh.h"
+#include "mesh.h"
 #include "shader.h"
 
 unsigned int TextureFromFile(const char *path, const string &directory, bool gamma = false);

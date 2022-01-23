@@ -2,7 +2,7 @@
 Fuoco
 
 # artifacts
-src/FuocoConfig.h
+src/fuoco_config.h
 
 # CMake
 CMakeFiles

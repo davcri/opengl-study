@@ -25,7 +25,7 @@ list(APPEND EXTRA_LIBS assimp)
 # GLAD
 include_directories(libs/glad/include)
 
-configure_file(src/FuocoConfig.h.in ${PROJECT_SOURCE_DIR}/src/FuocoConfig.h)
+configure_file(src/fuoco_config.h.in ${PROJECT_SOURCE_DIR}/src/fuoco_config.h)
 
 # add the executable
 add_executable(Fuoco src/main.cpp libs/glad/src/glad.c)

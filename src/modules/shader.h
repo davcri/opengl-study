@@ -1,5 +1,5 @@
-#ifndef SHADER_H
-#define SHADER_H
+#ifndef FUOCO_MODULES_SHADER_H_
+#define FUOCO_MODULES_SHADER_H_
 
 #include <string>
 #include <fstream>

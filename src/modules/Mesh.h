@@ -1,5 +1,5 @@
-#ifndef MESH_H
-#define MESH_H
+#ifndef FUOCO_MODULES_MESH_H_
+#define FUOCO_MODULES_MESH_H_
 
 #include <string>
 #include <vector>
