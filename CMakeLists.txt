@@ -6,7 +6,6 @@ project(Fuoco VERSION 1.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-include_directories(libs/shader)
 include_directories(libs/stb_image)
 include_directories(libs/glm-0.9.9.8)
 

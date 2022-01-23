@@ -1,25 +1,22 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <cmath>
 #include <iostream>
-#include "FuocoConfig.h"
-#include "shader.h"
-#include "cmath"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-#include "./camera.h"
 
-#include <assimp/Importer.hpp>
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/gtx/string_cast.hpp"
+#include "glm/gtx/rotate_vector.hpp"
+#include "assimp/Importer.hpp"
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
-// #include "Mesh.h"
-#include "Model.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/string_cast.hpp>
-#include <glm/gtx/rotate_vector.hpp>
+#include "FuocoConfig.h"
+#include "modules/shader.h"
+#include "modules/camera.h"
+#include "modules/Model.h"
+#include "modules/textures.h"
 
 int vWidth = 800;
 int vHeight = 600;
@@ -30,46 +27,7 @@ float prevX = 0.0f;
 float delta;
 float fov = 50.0f;
 
-Camera camera = Camera(glm::vec3(0, 0, 3), glm::vec3(0, 1, 0));
-
-// utility function for loading a 2D texture from file
-// ---------------------------------------------------
-unsigned int loadTexture(char const *path)
-{
-  unsigned int textureID;
-  glGenTextures(1, &textureID);
-
-  int width, height, nrComponents;
-  unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
-  if (data)
-  {
-    GLenum format;
-    if (nrComponents == 1)
-      format = GL_RED;
-    else if (nrComponents == 3)
-      format = GL_RGB;
-    else if (nrComponents == 4)
-      format = GL_RGBA;
-
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    stbi_image_free(data);
-  }
-  else
-  {
-    std::cout << "Texture failed to load at path: " << path << std::endl;
-    stbi_image_free(data);
-  }
-
-  return textureID;
-}
+Camera camera(glm::vec3(0, 0, 3), glm::vec3(0, 1, 0));
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height)
 {
@@ -147,11 +105,10 @@ int main()
     return -1;
   }
 
-  // glfwGetFramebufferSize(window, &vWidth, &vHeight);
   // glViewport(0, 0, vWidth, vHeight);
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+  TextureLoader textureLoader(true);
 
-  stbi_set_flip_vertically_on_load(true);
   Model modelFromAssimp("./assets/backpack/backpack.obj");
   // Shader lightShader("./shaders/light.vert", "./shaders/light.frag");
   Shader modelShader("./shaders/shader.vert", "./shaders/shader.frag");
@@ -185,9 +142,8 @@ int main()
     view = camera.GetViewMatrix();
 
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-    model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));     // it's a bit too big for our scene, so scale it down
-
+    // model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+    // model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
     modelShader.use();
     modelShader.setMat4("model", model);
     modelShader.setMat4("view", view);
